@@ -123,19 +123,20 @@ public class EksamenSBinTre<T> {
     }
 
     public int antall(T verdi) {
-        if (inneholder(verdi)){
+        int holder = 0;
+        if (inneholder(verdi)) {
             Node<T> p = rot, q = null;
             int cmp = 0;
-
-            while (p != null)
-            {
+            while (p != null) {
                 q = p;
-                cmp = comp.compare(verdi,p.verdi);
-                p = cmp < 0 ? p.venstre : p.høyre;   
-                antall++;
+                cmp = comp.compare(verdi, p.verdi);
+                p = cmp < 0 ? p.venstre : p.høyre;
+                if (q.verdi == verdi) {
+                    holder++;
+                }
             }
         }
-        return antall;
+        return holder;
     }
 
     public void nullstill() {
@@ -171,11 +172,14 @@ public class EksamenSBinTre<T> {
     }
 
     public static void main(String[] args) {
-        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
+        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
         EksamenSBinTre<Integer> tre = new EksamenSBinTre<>(Comparator.naturalOrder());
-        for ( int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre.antall());
-
+        for (int verdi : a) tre.leggInn(verdi);
+        System.out.println(tre.antall()); // Utskrift: 10
+        System.out.println(tre.antall(5)); // Utskrift: 0
+        System.out.println(tre.antall(4)); // Utskrift: 3
+        System.out.println(tre.antall(7)); // Utskrift: 2
+        System.out.println(tre.antall(10)); // Utskrift: 1
     }
 
 } // ObligSBinTre
