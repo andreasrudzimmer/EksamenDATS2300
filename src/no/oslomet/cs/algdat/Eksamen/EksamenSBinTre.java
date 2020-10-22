@@ -161,26 +161,34 @@ public class EksamenSBinTre<T> {
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
 
-        if (p.forelder == null)
+        if (p.forelder == null){                            // Sjekker om noden er rotnoden. Rot-node har ingen forelder, derfor returnerer den null.
             return null;
+        }
 
-        Node f = p.forelder;
-        if (f.høyre == null || f.høyre == p){
+
+        Node<T> f = p.forelder;
+        if (f.høyre == null || f.høyre == p){               // Sjekker om høyre gren er sjekket.
             return f;
         }
 
-        Node n = f.høyre;
-        while (n.venstre != null){
+        Node<T> n = f.høyre;
+        while (n.venstre != null){                           // Samme måte som førstePostorden, jobber seg til førstePostorden på høyre gren.
             n = n.venstre;
         }
-            p = n;
 
-
+        p = n;
         return p;
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        Node<T> p = rot;
+        p = førstePostorden(p);
+
+        while (p != null){
+            oppgave.utførOppgave(p.verdi);
+            p = nestePostorden(p);
+        }
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
