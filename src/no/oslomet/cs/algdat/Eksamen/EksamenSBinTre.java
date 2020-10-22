@@ -160,7 +160,32 @@ public class EksamenSBinTre<T> {
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+
+        if (p.forelder.høyre == p) {
+            p = p.forelder;
+            return p;
+        } else if (p.forelder.venstre == p && p.forelder.høyre == null) {
+            p = p.forelder;
+            return p;
+        } else if (p.forelder.venstre == p && p.forelder.høyre != null) {
+            p = p.forelder.høyre;
+            while (true) {
+                if (p.venstre != null) {
+                    p = p.venstre;
+                } else if (p.høyre != null) {
+                    p = p.høyre;
+                } else {
+                    return p;
+                }
+            }
+        } else if (p.forelder.høyre == p){
+            while (p.forelder.høyre == p && p.forelder != null){
+                p = p.forelder;
+            }
+            return p;
+        } else{
+            return null;}
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
@@ -192,6 +217,7 @@ public class EksamenSBinTre<T> {
         System.out.println(tre.antall(4)); // Utskrift: 3
         System.out.println(tre.antall(7)); // Utskrift: 2
         System.out.println(tre.antall(10)); // Utskrift: 1
+
     }
 
 } // ObligSBinTre
