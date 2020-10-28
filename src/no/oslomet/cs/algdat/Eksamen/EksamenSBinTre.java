@@ -212,7 +212,7 @@ public class EksamenSBinTre<T> {
         while (!q.isEmpty()) {
             Node<T> h = q.poll();
             if (h == null) {
-                list.add(h.verdi);
+
             } else {
                 list.add(h.verdi);
                 q.offer(h.venstre);
@@ -223,7 +223,30 @@ public class EksamenSBinTre<T> {
     }
 
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        EksamenSBinTre<K> nyttTre = new EksamenSBinTre<>(c);
+        for (K item: data) {
+            Node<K> en = nyttTre.rot, to = null;
+            int cmp = 0;
+            while (en != null) {
+                to = en;
+                cmp = c.compare(item,en.verdi);
+                en = cmp < 0 ? en.venstre : en.høyre;
+            }
+
+            en = new Node<K>(item, null);
+
+            if (to == null) {
+                nyttTre.rot = en;
+            } else if (cmp < 0)  {
+                to.venstre = en;
+                en.forelder = to;
+            } else {
+                to.høyre = en;
+                en.forelder = to;
+            }
+            nyttTre.antall++;
+        }
+        return nyttTre;
     }
 
     public static void main(String[] args) {
