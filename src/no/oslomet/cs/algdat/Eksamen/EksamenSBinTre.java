@@ -171,10 +171,21 @@ public class EksamenSBinTre<T> {
             return f;
         }
 
+
         Node<T> n = f.høyre;
-        while (n.venstre != null){                           // Samme måte som førstePostorden, jobber seg til førstePostorden på høyre gren.
+        while (n.venstre != null){
             n = n.venstre;
+            }
+        while (n.høyre != null) {
+            n = n.høyre;
         }
+        while (n.venstre != null){
+                n = n.venstre;
+            }
+
+
+
+
 
         p = n;
         return p;
@@ -250,15 +261,13 @@ public class EksamenSBinTre<T> {
     }
 
     public static void main(String[] args) {
-        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
+        int[] a = {6, 6, 4, 14, 1, 3, 8, 12, 12, 3, 3, 7, 9, 9, 11, 13, 8, 2, 5, 4, 4, 9, 4, 2, 2, 4 ,5, 6};
         EksamenSBinTre<Integer> tre = new EksamenSBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre.antall()); // Utskrift: 10
-        System.out.println(tre.antall(5)); // Utskrift: 0
-        System.out.println(tre.antall(4)); // Utskrift: 3
-        System.out.println(tre.antall(7)); // Utskrift: 2
-        System.out.println(tre.antall(10)); // Utskrift: 1
-
+        System.out.println(tre.antall());
+        System.out.println("[2, 2, 2, 3, 3, 3, 1, 4, 4, 4, 4, 5, 5, 4, 6, 7, 8, 9, 11, 9, 9, 13, 12, 12, 8, 14, 6, 6]");
+        System.out.println(tre.toStringPostOrder());
     }
 
 } // ObligSBinTre
+

@@ -37,6 +37,7 @@ public class EksamenTest {
         tre.leggInn(2);
         tre.leggInn(3);
 
+
         if (tre.antall() != 3) {
             antallFeil++;
             System.out.println
