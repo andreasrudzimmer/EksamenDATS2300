@@ -50,9 +50,9 @@ public class EksamenSBinTre<T> {
         Node<T> p = rot;
 
         while (p != null) {
-            int sml = comp.compare(verdi, p.verdi);
-            if (sml < 0) p = p.venstre;
-            else if (sml > 0) p = p.høyre;
+            int cmp = comp.compare(verdi, p.verdi);
+            if (cmp < 0) p = p.venstre;
+            else if (cmp > 0) p = p.høyre;
             else return true;
         }
 
@@ -85,13 +85,13 @@ public class EksamenSBinTre<T> {
         Objects.requireNonNull(verdi, "Ulovlig med nullverdier!");
 
         Node<T> p = rot, q = null;               // p starter i roten
-        int sml = 0;                             // hjelpevariabel
+        int cmp = 0;                             // hjelpevariabel
 
         while (p != null)                        // fortsetter til p er ute av treet
         {
             q = p;                               // q er forelder til p
-            sml = comp.compare(verdi,p.verdi);   // bruker komparatoren
-            p = sml < 0 ? p.venstre : p.høyre;   // flytter p
+            cmp = comp.compare(verdi,p.verdi);   // bruker komparatoren
+            p = cmp < 0 ? p.venstre : p.høyre;   // flytter p
         }
 
                                                  // p er nå null, dvs. ute av treet, q er den siste vi passerte
@@ -99,49 +99,49 @@ public class EksamenSBinTre<T> {
         p = new Node<T>(verdi, null);            // oppretter en ny node
 
         if (q == null) {
-            rot = p;                            // Rot har ingen eksisterende forelder
+            rot = p;                            // p blir rotnode
         }
-        else if (sml < 0) {
+        else if (cmp < 0) {                     // venstre barn til q
             q.venstre = p;
             p.forelder = q;
         }
-        else {
+        else {                                     // Høyre barn til q
             q.høyre = p;
             p.forelder = q;
         }
-
-        antall++;
-        return true;
+        endringer++;                               // +1 i endringer gjort med treet
+        antall++;                                // +1 verdi inn i treet
+        return true;                            // innlegget er utført
     }
 
     public boolean fjern(T verdi) {
-        if(verdi == null) {
+        if(verdi == null) {                 // Ingen null-verdier i treet
             return false;
         }
 
         Node<T> p = rot;
 
-        while(p != null){
-            int sml = comp.compare(verdi,p.verdi);
+        while(p != null){                                   // Leter gjennom treet
+            int cmp = comp.compare(verdi,p.verdi);          // Finner like verdier i treet. 
 
-            if(sml < 0){
-                p = p.venstre;
+            if(cmp < 0){
+                p = p.venstre;                         // går til venstre
             }
-            else if(sml > 0){
+            else if(cmp > 0){                          // går til høyre
                 p = p.høyre;
             }
-            else break;
+            else break;                               // verdi ligger i p
         }
 
-        if (p == null){
+        if (p == null){                               // verdi ikke funnet
             return false;
         }
 
         if (p.venstre==null || p.høyre==null) {
 
-            Node<T> b = (p.venstre!=null) ? p.venstre : p.høyre;
+            Node<T> b = (p.venstre!=null) ? p.venstre : p.høyre;      // b betyr barn
 
-            if (p == rot) {
+            if (p == rot) {                                     // Tilfelle
                 rot =  b;
                 if(b != null) {
                     b.forelder = null;
@@ -153,18 +153,18 @@ public class EksamenSBinTre<T> {
             } else {
 
                 if(b != null){
-                    b.forelder = p.forelder;
+                    b.forelder = p.forelder;                        // kopierer b sin forelder og setter den til p sin forelder
                 }
                 p.forelder.høyre = b;
             }
         }
-        else {
+        else {                                                      // tilfelle
 
             Node<T> r = p.høyre;
             while (r.venstre != null) {
                 r = r.venstre;
             }
-            p.verdi = r.verdi;
+            p.verdi = r.verdi;                                          // kopierer r og setter den til p
 
             if(r.forelder != p) {
                 Node<T> q = r.forelder;
@@ -180,37 +180,38 @@ public class EksamenSBinTre<T> {
                 }
             }
         }
-        antall--;
-        return true;
+        endringer++;                                          // +1 i endringer gjort med treet
+        antall--;                                               // -1 verdi i treet
+        return true;                                            // fjernet er utført
     }
 
     public int fjernAlle(T verdi) {
         ArrayList<T> liste = serialize();
         int teller = 0;
-        for (int i = 0; i < liste.size(); i++){
-            if (verdi.equals(liste.get(i)) || verdi == liste.get(i)){
-                fjern(liste.get(i));
-                teller++;
+        for (int i = 0; i < liste.size(); i++){                                 // Går gjennom listen
+            if (verdi.equals(liste.get(i)) || verdi == liste.get(i)){           // finner verdier lik verdi
+                fjern(liste.get(i));                                            // fjerner verdien
+                teller++;                                                       // anntall verdier fjernet +1
             }
         }
-        return teller;
+        return teller;                                                          // returnerer antall av verdien den fjernet
     }
 
     public int antall(T verdi) {
         int holder = 0;
-        if (inneholder(verdi)) {
+        if (inneholder(verdi)) {                           // Bruker inneholder metoden til å se om verdien ligger i treet. kjøres dersom den gjør det.
             Node<T> p = rot, q = null;
-            int sml = 0;
-            while (p != null) {
+            int cmp = 0;
+            while (p != null) {                           // Loopen kjøres så lenge p ikke er lik null.
                 q = p;
-                sml = comp.compare(verdi, p.verdi);
-                p = sml < 0 ? p.venstre : p.høyre;
+                cmp = comp.compare(verdi, p.verdi);
+                p = cmp < 0 ? p.venstre : p.høyre;
                 if (q.verdi == verdi) {
                     holder++;
                 }
             }
         }
-        return holder;
+        return holder;                                    // Returnerer antallet av verdien i treet.
     }
 
     public void nullstill() {
@@ -225,14 +226,14 @@ public class EksamenSBinTre<T> {
     private static <T> Node<T> førstePostorden(Node<T> p) {
         int k = 2;
         while (k != 1){
-            if (p.venstre != null){
+            if (p.venstre != null){                 // Beveger seg på venstre side for p.
                 p = p.venstre;
             }
-            else if (p.høyre != null){
+            else if (p.høyre != null){              //  Beveger seg på høyre side for p, dersom p.venstre er lik null.
                 p = p.høyre;
             }
             else {
-                return p;
+                return p;                           //  Returnerer første node i Postorden
             }
         }
         return null;
@@ -246,19 +247,19 @@ public class EksamenSBinTre<T> {
 
 
         Node<T> f = p.forelder;
-        if (f.høyre == null || f.høyre == p){               // Sjekker om høyre gren er sjekket.
+        if (f.høyre == null || f.høyre == p){               // Sjekker om høyre gren er sjekket. Beverger deg opp til forelder.
             return f;
         }
 
 
         Node<T> n = f.høyre;
-        while (n.venstre != null){
+        while (n.venstre != null){                          // Beveger seg ned til neste node i postorden, i høyre gren.
             n = n.venstre;
             }
-        while (n.høyre != null) {
+        while (n.høyre != null) {                           // Beveger seg derretter ned høyre gren.
             n = n.høyre;
         }
-        while (n.venstre != null){
+        while (n.venstre != null){                          // Beveger seg derretter til venstre gren i høyre gren.
                 n = n.venstre;
             }
 
@@ -271,7 +272,7 @@ public class EksamenSBinTre<T> {
         Node<T> p = rot;
         p = førstePostorden(p);
 
-        while (p != null){
+        while (p != null){                                     // Beveger seg gjennom hele treet.
             oppgave.utførOppgave(p.verdi);
             p = nestePostorden(p);
         }
@@ -291,38 +292,38 @@ public class EksamenSBinTre<T> {
     }
 
     public ArrayList<T> serialize() {
-        ArrayList<T> list = new ArrayList<>();
-        LinkedList<Node> q = new LinkedList<>();
+        ArrayList<T> liste = new ArrayList<>();                          // oppretter ny liste
+        LinkedList<Node> q = new LinkedList<>();                            // oppretter ny linket liste
         q.offer(rot);
 
-        while (!q.isEmpty()) {
+        while (!q.isEmpty()) {                                          // loop
             Node<T> h = q.poll();
-            if (h == null) {
+            if (h == null) {                                                // legges til dersom h ikke er null
             } else {
-                list.add(h.verdi);
+                liste.add(h.verdi);
                 q.offer(h.venstre);
                 q.offer(h.høyre);
             }
         }
-        return list;
+        return liste;                                                     // returnerer listen.
     }
 
     static <K> EksamenSBinTre<K> deserialize(ArrayList<K> data, Comparator<? super K> c) {
-        EksamenSBinTre<K> nyttTre = new EksamenSBinTre<>(c);
-        for (K item: data) {
+        EksamenSBinTre<K> nyttTre = new EksamenSBinTre<>(c);                   // Lager et nytt tre.
+        for (K item: data) {                                                   // Looper gjennom array-listen som kommer inn i metoden
             Node<K> en = nyttTre.rot, to = null;
-            int sml = 0;
-            while (en != null) {
+            int cmp = 0;
+            while (en != null) {                                               // Utføres på lik måte som Legginn()
                 to = en;
-                sml = c.compare(item,en.verdi);
-                en = sml < 0 ? en.venstre : en.høyre;
+                cmp = c.compare(item,en.verdi);
+                en = cmp < 0 ? en.venstre : en.høyre;
             }
 
             en = new Node<K>(item, null);
 
             if (to == null) {
                 nyttTre.rot = en;
-            } else if (sml < 0)  {
+            } else if (cmp < 0)  {
                 to.venstre = en;
                 en.forelder = to;
             } else {
@@ -333,17 +334,5 @@ public class EksamenSBinTre<T> {
         }
         return nyttTre;
     }
-
-    public static void main(String[] args) {
-        int[] a = {6, 6, 4, 14, 1, 3, 8, 12, 12, 3, 3, 7, 9, 9, 11, 13, 8, 2, 5, 4, 4, 9, 4, 2, 2, 4 ,5, 6};
-        EksamenSBinTre<Integer> tre = new EksamenSBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) tre.leggInn(verdi);
-        System.out.println(tre.antall());
-        System.out.println("[2, 2, 2, 3, 3, 3, 1, 4, 4, 4, 4, 5, 5, 4, 6, 7, 8, 9, 11, 9, 9, 13, 12, 12, 8, 14, 6, 6]");
-        System.out.println(tre.toStringPostOrder());
-        tre.fjern(4);
-        System.out.println(tre.toStringPostOrder());
-    }
-
 } // ObligSBinTre
 
