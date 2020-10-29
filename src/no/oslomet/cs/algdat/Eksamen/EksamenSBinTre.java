@@ -50,9 +50,9 @@ public class EksamenSBinTre<T> {
         Node<T> p = rot;
 
         while (p != null) {
-            int cmp = comp.compare(verdi, p.verdi);
-            if (cmp < 0) p = p.venstre;
-            else if (cmp > 0) p = p.høyre;
+            int sml = comp.compare(verdi, p.verdi);
+            if (sml < 0) p = p.venstre;
+            else if (sml > 0) p = p.høyre;
             else return true;
         }
 
@@ -85,13 +85,13 @@ public class EksamenSBinTre<T> {
         Objects.requireNonNull(verdi, "Ulovlig med nullverdier!");
 
         Node<T> p = rot, q = null;               // p starter i roten
-        int cmp = 0;                             // hjelpevariabel
+        int sml = 0;                             // hjelpevariabel
 
         while (p != null)                        // fortsetter til p er ute av treet
         {
             q = p;                               // q er forelder til p
-            cmp = comp.compare(verdi,p.verdi);   // bruker komparatoren
-            p = cmp < 0 ? p.venstre : p.høyre;   // flytter p
+            sml = comp.compare(verdi,p.verdi);   // bruker komparatoren
+            p = sml < 0 ? p.venstre : p.høyre;   // flytter p
         }
 
                                                  // p er nå null, dvs. ute av treet, q er den siste vi passerte
@@ -101,7 +101,7 @@ public class EksamenSBinTre<T> {
         if (q == null) {
             rot = p;                            // Rot har ingen eksisterende forelder
         }
-        else if (cmp < 0) {
+        else if (sml < 0) {
             q.venstre = p;
             p.forelder = q;
         }
@@ -115,22 +115,96 @@ public class EksamenSBinTre<T> {
     }
 
     public boolean fjern(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if(verdi == null) {
+            return false;
+        }
+
+        Node<T> p = rot;
+
+        while(p != null){
+            int sml = comp.compare(verdi,p.verdi);
+
+            if(sml < 0){
+                p = p.venstre;
+            }
+            else if(sml > 0){
+                p = p.høyre;
+            }
+            else break;
+        }
+
+        if (p == null){
+            return false;
+        }
+
+        if (p.venstre==null || p.høyre==null) {
+
+            Node<T> b = (p.venstre!=null) ? p.venstre : p.høyre;
+
+            if (p == rot) {
+                rot =  b;
+                if(b != null) {
+                    b.forelder = null;
+                }
+            }
+            else if (p == p.forelder.venstre) {
+                if(b != null)b.forelder = p.forelder;
+                p.forelder.venstre = b;
+            } else {
+
+                if(b != null){
+                    b.forelder = p.forelder;
+                }
+                p.forelder.høyre = b;
+            }
+        }
+        else {
+
+            Node<T> r = p.høyre;
+            while (r.venstre != null) {
+                r = r.venstre;
+            }
+            p.verdi = r.verdi;
+
+            if(r.forelder != p) {
+                Node<T> q = r.forelder;
+                q.venstre = r.høyre;
+                if(q.venstre != null){
+                    q.venstre.forelder = q;
+                }
+            }
+            else{
+                p.høyre =  r.høyre;
+                if(p.høyre != null){
+                    p.høyre.forelder = p;
+                }
+            }
+        }
+        antall--;
+        return true;
     }
 
     public int fjernAlle(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        ArrayList<T> liste = serialize();
+        int teller = 0;
+        for (int i = 0; i < liste.size(); i++){
+            if (verdi.equals(liste.get(i)) || verdi == liste.get(i)){
+                fjern(liste.get(i));
+                teller++;
+            }
+        }
+        return teller;
     }
 
     public int antall(T verdi) {
         int holder = 0;
         if (inneholder(verdi)) {
             Node<T> p = rot, q = null;
-            int cmp = 0;
+            int sml = 0;
             while (p != null) {
                 q = p;
-                cmp = comp.compare(verdi, p.verdi);
-                p = cmp < 0 ? p.venstre : p.høyre;
+                sml = comp.compare(verdi, p.verdi);
+                p = sml < 0 ? p.venstre : p.høyre;
                 if (q.verdi == verdi) {
                     holder++;
                 }
@@ -140,7 +214,12 @@ public class EksamenSBinTre<T> {
     }
 
     public void nullstill() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        ArrayList<T> liste = serialize();
+        int teller = 0;
+        for (int i = 0; i < liste.size(); i++){
+            fjern(liste.get(i));
+            teller++;
+        }
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
@@ -183,10 +262,6 @@ public class EksamenSBinTre<T> {
                 n = n.venstre;
             }
 
-
-
-
-
         p = n;
         return p;
     }
@@ -223,7 +298,6 @@ public class EksamenSBinTre<T> {
         while (!q.isEmpty()) {
             Node<T> h = q.poll();
             if (h == null) {
-
             } else {
                 list.add(h.verdi);
                 q.offer(h.venstre);
@@ -237,18 +311,18 @@ public class EksamenSBinTre<T> {
         EksamenSBinTre<K> nyttTre = new EksamenSBinTre<>(c);
         for (K item: data) {
             Node<K> en = nyttTre.rot, to = null;
-            int cmp = 0;
+            int sml = 0;
             while (en != null) {
                 to = en;
-                cmp = c.compare(item,en.verdi);
-                en = cmp < 0 ? en.venstre : en.høyre;
+                sml = c.compare(item,en.verdi);
+                en = sml < 0 ? en.venstre : en.høyre;
             }
 
             en = new Node<K>(item, null);
 
             if (to == null) {
                 nyttTre.rot = en;
-            } else if (cmp < 0)  {
+            } else if (sml < 0)  {
                 to.venstre = en;
                 en.forelder = to;
             } else {
@@ -266,6 +340,8 @@ public class EksamenSBinTre<T> {
         for (int verdi : a) tre.leggInn(verdi);
         System.out.println(tre.antall());
         System.out.println("[2, 2, 2, 3, 3, 3, 1, 4, 4, 4, 4, 5, 5, 4, 6, 7, 8, 9, 11, 9, 9, 13, 12, 12, 8, 14, 6, 6]");
+        System.out.println(tre.toStringPostOrder());
+        tre.fjern(4);
         System.out.println(tre.toStringPostOrder());
     }
 
