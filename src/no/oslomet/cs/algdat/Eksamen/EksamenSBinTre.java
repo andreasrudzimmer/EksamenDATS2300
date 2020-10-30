@@ -44,6 +44,14 @@ public class EksamenSBinTre<T> {
         comp = c;
     }
 
+    public void nullstillHjelp(Node<T> n){                         // Lagde hjelpemetode for nullstill()
+        if(n != null) {
+            nullstillHjelp(n.venstre);
+            nullstillHjelp(n.høyre);
+            fjern(n.verdi);
+        }
+    }
+
     public boolean inneholder(T verdi) {
         if (verdi == null) return false;
 
@@ -96,7 +104,7 @@ public class EksamenSBinTre<T> {
 
                                                  // p er nå null, dvs. ute av treet, q er den siste vi passerte
 
-        p = new Node<T>(verdi, null);            // oppretter en ny node
+        p = new Node<>(verdi, null);            // oppretter en ny node
 
         if (q == null) {
             rot = p;                            // p blir rotnode
@@ -200,8 +208,8 @@ public class EksamenSBinTre<T> {
     public int antall(T verdi) {
         int holder = 0;
         if (inneholder(verdi)) {                           // Bruker inneholder metoden til å se om verdien ligger i treet. kjøres dersom den gjør det.
-            Node<T> p = rot, q = null;
-            int cmp = 0;
+            Node<T> p = rot, q;
+            int cmp;
             while (p != null) {                           // Loopen kjøres så lenge p ikke er lik null.
                 q = p;
                 cmp = comp.compare(verdi, p.verdi);
@@ -214,13 +222,9 @@ public class EksamenSBinTre<T> {
         return holder;                                    // Returnerer antallet av verdien i treet.
     }
 
-    public void nullstill() {
-        ArrayList<T> liste = serialize();
-        int teller = 0;
-        for (int i = 0; i < liste.size(); i++){
-            fjern(liste.get(i));
-            teller++;
-        }
+    public void nullstill() {                            // Bruker hjelpemetoden nullstillHjelp til å nullstille treet.
+        endringer++;
+        nullstillHjelp(rot);
     }
 
     private static <T> Node<T> førstePostorden(Node<T> p) {
@@ -319,7 +323,7 @@ public class EksamenSBinTre<T> {
                 en = cmp < 0 ? en.venstre : en.høyre;
             }
 
-            en = new Node<K>(item, null);
+            en = new Node<>(item, null);
 
             if (to == null) {
                 nyttTre.rot = en;
