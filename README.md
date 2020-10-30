@@ -1,6 +1,6 @@
 # Mappeeksamen i Algoritmer og Datastrukturer Høst 2020
 
-Jeg har brukt git til å dokumentere arbeidet mitt. Jeg har 15 commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
+Jeg har brukt git til å dokumentere arbeidet mitt. Jeg har 19 commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
 
 * Oppgave 1: Kopiert inn programkode som anbefalt i oppgaveteksten. Derretter gjorde jeg endringer så forelder fikk riktig verdi i hver node. ( La til if else ). Gjorde egne tester i Main metode, hvor alle besto. Derretter testet jeg det i EksamenTest. Denne består også. 
 
