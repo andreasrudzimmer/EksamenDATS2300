@@ -1,6 +1,6 @@
 # Mappeeksamen i Algoritmer og Datastrukturer Høst 2020
 
-Jeg har brukt git til å dokumentere arbeidet mitt. Jeg har 20 commits totalt, og hver logg-melding beskriver det jeg har gjort av endringer.
+Jeg har brukt git til å dokumentere arbeidet mitt. Jeg har 24 commits totalt, inkludert endringer på readme, og hver logg-melding beskriver det jeg har gjort av endringer.
 
 * Oppgave 1: Kopiert inn programkode som anbefalt i oppgaveteksten. Den kopierte metoden tar inn en verdi som skal plasseres i treet, og bruker en while-løkke til å plassere den. Derretter gjorde jeg endringer så forelder fikk riktig verdi i hver node. ( La til if else ). Gjorde egne tester i Main metode, hvor alle besto. Derretter testet jeg det i EksamenTest. Denne består også. Antallet verduer i treet stiger gjennom antall++ og det blir også registrert at det er gjort en endring gjennom endringer++. Metoden returerer true da innlegget var vellykket.  
 
